@@ -33,7 +33,7 @@ const createMapper = (request) => {
       return formatDate(new Date(r.duedate))
     },
     labels: () => {
-      return [user];
+      return [user, r.affected_application];
     },
     priorityName: () => {
       if (r.priority === 'NORMAL') {
