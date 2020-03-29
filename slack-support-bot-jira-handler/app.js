@@ -24,9 +24,9 @@ exports.lambdaHandler = async (event, context) => {
     let msgText = '';
     try {
       let result = await jira.create(request);
-      msgText = 'Creating issue "' + request.request.summary + '" succeeded - @' + (new Date()).toLocaleString();
+      msgText = 'The issue "' + request.request.summary + '" created succeefully - @' + (new Date()).toLocaleString();
     } catch(e) {
-      msgText = 'Creating issue "' + request.request.summary + '" failed - @' + (new Date()).toLocaleString()
+      msgText = 'Unable to create issue "' + request.request.summary + '" - @' + (new Date()).toLocaleString()
         + ', please contact technical support.';
     }
     
