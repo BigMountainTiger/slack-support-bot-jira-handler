@@ -34,19 +34,15 @@ const create = async (request) => {
     }
   };
 
-  jira.issue.createIssue(
-    data, (error, issue) => {
-      console.log(error);
-      console.log(issue);
-    }
-  );
+  let promise = new Promise((resolve, reject) => {
+    jira.issue.createIssue(
+      data, (error, issue) => {
+        if (error) { reject(error); } else { resolve(issue); }
+      }
+    );
+  });
 
-  // let request = new Promise((resolve, reject) => {
-  //   sqs.sendMessage(params, (err, data) => {
-  //     if (err) { reject(err); } else { resolve(data.MessageId) }
-  //   });
-  // });
-
+  return await promise;
 };
 
 exports.create = create;
