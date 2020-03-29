@@ -19,6 +19,8 @@ exports.lambdaHandler = async (event, context) => {
   for (let i = 0; i < requests.length; i++) {
     const request = requests[i];
 
+    console.log(request);
+
     let msgText = '';
     try {
       let result = await jira.create(request);

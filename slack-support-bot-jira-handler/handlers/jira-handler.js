@@ -2,7 +2,8 @@ const JIRA_HOST = process.env.JIRA_HOST;
 const JIRA_AUTH_EMAIL = process.env.JIRA_AUTH_EMAIL;
 const JIRA_AUTH_TOKEN = process.env.JIRA_AUTH_TOKEN;
 
-const JiraClient = require("jira-connector");
+const JiraClient = require('jira-connector');
+const jiraMapper = require('./jira-mapper');
 
 const create = async (request) => {
   const jira = new JiraClient({
@@ -13,7 +14,8 @@ const create = async (request) => {
     }
   });
 
-  let data = {
+  const mapper = jiraMapper.createMapper(request);
+  const data = {
 
     fields: {
       project: { key: 'SLE' },
@@ -34,11 +36,9 @@ const create = async (request) => {
     }
   };
 
-  let promise = new Promise((resolve, reject) => {
+  const promise = new Promise((resolve, reject) => {
     jira.issue.createIssue(
-      data, (error, issue) => {
-        if (error) { reject(error); } else { resolve(issue); }
-      }
+      data, (error, issue) => { if (error) { reject(error); } else { resolve(issue); } }
     );
   });
 
