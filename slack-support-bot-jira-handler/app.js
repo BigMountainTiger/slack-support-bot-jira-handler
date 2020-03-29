@@ -1,18 +1,17 @@
 require('dotenv').config();
 
-const { WebClient } = require('@slack/web-api');
-
-const BOT_TOKEN = process.env.BOT_TOKEN;
-const USER = 'U01023BN1MX';
+const slack = require('./handlers/slack-informer');
 
 exports.lambdaHandler = async (event, context) => {
-  
-  const web = new WebClient(BOT_TOKEN);
+  //console.log(event);
 
-  await web.chat.postMessage({
+  const USER = 'U01023BN1MX';
+  let msg = {
     channel: USER,
-    text: 'New message'
-  });
+    text: 'New message - ' + (new Date()).toLocaleString()
+  };
+
+  await slack.inform(msg);
 
   return {};
 };
