@@ -1,0 +1,9 @@
+version = 0.1
+[default]
+[default.deploy]
+[default.deploy.parameters]
+stack_name = "slack-bot-app-jira-handler"
+s3_bucket = "sam.huge.head.li"
+s3_prefix = "slack-bot-app-jira-handler"
+region = "us-east-1"
+capabilities = "CAPABILITY_IAM"
