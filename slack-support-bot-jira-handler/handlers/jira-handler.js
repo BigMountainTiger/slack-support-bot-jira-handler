@@ -14,25 +14,25 @@ const create = async (request) => {
     }
   });
 
-  const mapper = jiraMapper.createMapper(request);
+  const m = jiraMapper.createMapper(request);
   const data = {
 
     fields: {
-      project: { key: 'SLE' },
-      summary: 'This is the summary No.1',
-      description: 'Creating of an issue using project keys and issue type names using the REST API',
+      project: { key: m.projectKey() },
+      summary: m.summary(),
+      description: m.description(),
       reporter: {
-        accountId: '5e7e9cec1e65980c42c12b5d'
+        accountId: m.reporterId()
       },
       assignee: {
-        accountId: '5e7e9cec1e65980c42c12b5d'
+        accountId: m.assigneeId()
       },
-      duedate: '2020-04-12',
-      labels: [ 'da_tou_li' ],
+      duedate: m.duedate(),
+      labels: m.labels(),
       priority: {
-        name: 'Medium'
+        name: m.priorityName()
       },
-      issuetype: { name: 'Bug' },
+      issuetype: { name: m.issuetypeName() },
     }
   };
 
