@@ -41,6 +41,12 @@ const create = async (request) => {
     }
   );
 
+  // let request = new Promise((resolve, reject) => {
+  //   sqs.sendMessage(params, (err, data) => {
+  //     if (err) { reject(err); } else { resolve(data.MessageId) }
+  //   });
+  // });
+
 };
 
 exports.create = create;
