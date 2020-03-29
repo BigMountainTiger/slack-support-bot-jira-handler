@@ -2,16 +2,31 @@ require('dotenv').config();
 
 const slack = require('./handlers/slack-informer');
 
+const getRequests = (event) => {
+  let requests = [];
+
+  for ( const {body} of (event.Records || [])) {
+    requests.push(JSON.parse(body));
+  }
+
+  return requests;
+};
+
 exports.lambdaHandler = async (event, context) => {
-  //console.log(event);
+  const requests = getRequests(event);
 
-  const USER = 'U01023BN1MX';
-  let msg = {
-    channel: USER,
-    text: 'New message - ' + (new Date()).toLocaleString()
-  };
+  for (let i = 0; i < requests.length; i++) {
+    const r = requests[i];
 
-  await slack.inform(msg);
+    console.log(r);
+    const USER = r.user.id;
+    const msg = {
+      channel: USER,
+      text: 'New message - ' + r.user.name + ' - ' + (new Date()).toLocaleString()
+    };
+
+    await slack.inform(msg);
+  }
 
   return {};
 };
