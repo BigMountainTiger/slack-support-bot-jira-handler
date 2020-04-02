@@ -3,6 +3,9 @@ const axios = require('axios');
 const FormData = require('form-data');
 
 const BOT_TOKEN = process.env.BOT_TOKEN;
+const JIRA_AUTH_EMAIL = process.env.JIRA_AUTH_EMAIL;
+const JIRA_AUTH_TOKEN = process.env.JIRA_AUTH_TOKEN;
+const JIRA_ATTACHMENT_URL = process.env.JIRA_ATTACHMENT_URL;
 
 const attachAFile = async (data) => {
   const jiraId = data.jiraId;
@@ -22,14 +25,14 @@ const attachAFile = async (data) => {
   const form = new FormData();
   form.append('file', slack_res.data);
 
-  const jira_url = `https://song-li-experiment.atlassian.net/rest/api/2/issue/${jiraId}/attachments`;
+  const jira_url = JIRA_ATTACHMENT_URL.replace('${jiraId}', jiraId);
   options = {
     method: 'POST',
     headers: {
       'X-Atlassian-Token': 'nocheck',
       'content-type': `multipart/form-data; boundary=${form._boundary}`
     },
-    auth: { username: 'da_tou_li@yahoo.com', password: 'BQBR3jOpcPRnnwqiuek28358' },
+    auth: { username: JIRA_AUTH_EMAIL, password: JIRA_AUTH_TOKEN },
     data: form,
     url: jira_url,
   };
