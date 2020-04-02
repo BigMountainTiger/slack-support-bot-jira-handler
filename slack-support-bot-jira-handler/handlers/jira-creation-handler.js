@@ -42,7 +42,16 @@ const create = async (request) => {
     );
   });
 
-  return await promise;
+  let msgText = '';
+  try {
+    let result = await promise;
+    msgText = 'The issue "' + request.request.summary + '" created succeefully - @' + (new Date()).toLocaleString();
+  } catch(e) {
+    msgText = 'Unable to create issue "' + request.request.summary + '" - @' + (new Date()).toLocaleString()
+      + ', please contact technical support.';
+  }
+
+  return msgText;
 };
 
 exports.create = create;

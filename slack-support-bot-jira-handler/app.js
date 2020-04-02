@@ -1,6 +1,7 @@
 require('dotenv').config();
 
-const jiraCreator = require('./handlers/jira-creation-handler');
+const jiraCreationHandler = require('./handlers/jira-creation-handler');
+const jiraAttachmentHandler = require('./handlers/jira-attachment-handler');
 const slack = require('./handlers/slack-informer');
 
 const getRequests = (event) => {
@@ -19,13 +20,13 @@ exports.lambdaHandler = async (event, context) => {
   for (let i = 0; i < requests.length; i++) {
     const request = requests[i];
 
-    let msgText = '';
-    try {
-      let result = await jiraCreator.create(request);
-      msgText = 'The issue "' + request.request.summary + '" created succeefully - @' + (new Date()).toLocaleString();
-    } catch(e) {
-      msgText = 'Unable to create issue "' + request.request.summary + '" - @' + (new Date()).toLocaleString()
-        + ', please contact technical support.';
+    let msgText = 'Unknow Request';
+    if (request.type === 'DIALOG') {
+      msgText = await jiraCreationHandler.create(request);
+    }
+    
+    if (request.type === 'ATTACHMENT') {
+      msgText = await jiraAttachmentHandler.attach(request);
     }
     
     const msg = {
