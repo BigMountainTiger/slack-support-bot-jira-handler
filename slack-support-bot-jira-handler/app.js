@@ -1,6 +1,6 @@
 require('dotenv').config();
 
-const jira = require('./handlers/jira-handler');
+const jiraCreator = require('./handlers/jira-creation-handler');
 const slack = require('./handlers/slack-informer');
 
 const getRequests = (event) => {
@@ -19,11 +19,9 @@ exports.lambdaHandler = async (event, context) => {
   for (let i = 0; i < requests.length; i++) {
     const request = requests[i];
 
-    console.log(request);
-
     let msgText = '';
     try {
-      let result = await jira.create(request);
+      let result = await jiraCreator.create(request);
       msgText = 'The issue "' + request.request.summary + '" created succeefully - @' + (new Date()).toLocaleString();
     } catch(e) {
       msgText = 'Unable to create issue "' + request.request.summary + '" - @' + (new Date()).toLocaleString()
