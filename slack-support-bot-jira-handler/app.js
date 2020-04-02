@@ -29,12 +29,10 @@ exports.lambdaHandler = async (event, context) => {
       msgText = await jiraAttachmentHandler.attach(request);
     }
     
-    const msg = {
+    await slack.inform({
       channel: request.user.id,
       text: msgText
-    };
-
-    await slack.inform(msg);
+    });
   }
 
   return {};
