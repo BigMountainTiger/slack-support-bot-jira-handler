@@ -1,18 +1,11 @@
-const JIRA_HOST = process.env.JIRA_HOST;
+const axios = require('axios');
+const jiraMapper = require('./jira-mapper');
+
+const JIRA_CREATE_URL = process.env.JIRA_CREATE_URL;
 const JIRA_AUTH_EMAIL = process.env.JIRA_AUTH_EMAIL;
 const JIRA_AUTH_TOKEN = process.env.JIRA_AUTH_TOKEN;
 
-const JiraClient = require('jira-connector');
-const jiraMapper = require('./jira-mapper');
-
 const create = async (request) => {
-  const jira = new JiraClient({
-    host: JIRA_HOST,
-    basic_auth: {
-      email: JIRA_AUTH_EMAIL,
-      api_token: JIRA_AUTH_TOKEN
-    }
-  });
 
   const m = jiraMapper.createMapper(request);
   const data = {
@@ -36,17 +29,24 @@ const create = async (request) => {
     }
   };
 
-  const promise = new Promise((resolve, reject) => {
-    jira.issue.createIssue(
-      data, (error, issue) => { if (error) { reject(error); } else { resolve(issue); } }
-    );
-  });
+  options = {
+    method: 'POST',
+    headers: {
+      'X-Atlassian-Token': 'nocheck',
+      'content-type': 'application/json'
+    },
+    auth: { username: JIRA_AUTH_EMAIL, password: JIRA_AUTH_TOKEN },
+    data: data,
+    url: JIRA_CREATE_URL,
+  };
 
   let msgText = '';
   try {
-    let result = await promise;
+    let result = await axios(options);
+
     msgText = 'The issue "' + request.request.summary + '" created succeefully - @' + (new Date()).toLocaleString();
   } catch(e) {
+
     msgText = 'Unable to create issue "' + request.request.summary + '" - @' + (new Date()).toLocaleString()
       + ', please contact technical support.';
   }
