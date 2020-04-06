@@ -7,24 +7,22 @@ const slack = require('./handlers/slack-informer');
 const getRequests = (event) => {
   let requests = [];
 
-  for ( const {body} of (event.Records || [])) {
-    requests.push(JSON.parse(body));
+  try {
+    
+    for ( const {body} of (event.Records || [])) {
+      requests.push(JSON.parse(body));
+    }
+  } catch(e) {
+    console.error('Unable to parse the SQS event\n' + JSON.stringify(event));
+    requests = [];
   }
 
   return requests;
 };
 
-exports.lambdaHandler = async (event, context) => {
-  let requests = [];
-  try {
-    requests = getRequests(event);
-  } catch(e) {
-    console.error('Unable to parse the SQS event');
-    console.error(event);
-
-    return {};
-  }
-
+const processRequests = async (event) => {
+  const requests = getRequests(event);
+  
   for (let i = 0; i < requests.length; i++) {
     const request = requests[i];
 
@@ -37,10 +35,25 @@ exports.lambdaHandler = async (event, context) => {
       msgText = await jiraAttachmentHandler.attach(request);
     }
     
-    await slack.inform({
+    const msg = {
       channel: request.user.id,
       text: msgText
-    });
+    };
+    try {
+      await slack.inform(msg);
+    } catch(e) {
+      console.error('Unable to send the message to slack\n' + JSON.stringify(msg));
+    }
+  
+  }
+};
+
+exports.lambdaHandler = async (event, context) => {
+  try {
+    await processRequests(event);
+  }
+  catch(e) {
+    console.error('LAST defense -  error\n' + JSON.stringify(e));
   }
 
   return {};
