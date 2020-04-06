@@ -15,7 +15,15 @@ const getRequests = (event) => {
 };
 
 exports.lambdaHandler = async (event, context) => {
-  const requests = getRequests(event);
+  let requests = [];
+  try {
+    requests = getRequests(event);
+  } catch(e) {
+    console.error('Unable to parse the SQS event');
+    console.error(event);
+
+    return {};
+  }
 
   for (let i = 0; i < requests.length; i++) {
     const request = requests[i];
