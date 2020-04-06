@@ -62,7 +62,7 @@ const create = async (request) => {
       + `*Issue Key:* ${key}\n`
       + `*Issue Summary:* ${summary}\n\n`
       + `To attach a file to the issue, upload the file to "*${BOT_APP_NAME}*" `
-      + `and type the issue key *${key}* (*Issue key only*) in the message when share the file.\n`;
+      + `and type the issue key ${key} (*Issue key only*) in the message when share the file.\n`;
 
   } catch(e) {
     const summary = request.request.summary;

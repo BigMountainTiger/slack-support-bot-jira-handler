@@ -75,7 +75,7 @@ const attach = async (request) => {
     allStatus.push(status);
   }
 
-  let msg = `*File attachment status for ${jiraId}*\n\n`;
+  let msg = `*File attachment status for* ${jiraId}\n\n`;
   for (let i = 0; i < allStatus.length; i++) {
     msg = msg + allStatus[i] + '\n';
   }
