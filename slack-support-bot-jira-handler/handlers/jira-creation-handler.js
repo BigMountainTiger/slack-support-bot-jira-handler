@@ -5,9 +5,9 @@ const JIRA_CREATE_URL = process.env.JIRA_CREATE_URL;
 const JIRA_AUTH_EMAIL = process.env.JIRA_AUTH_EMAIL;
 const JIRA_AUTH_TOKEN = process.env.JIRA_AUTH_TOKEN;
 
-const create = async (request) => {
-
+const mappData = (request) => {
   const m = jiraMapper.createMapper(request);
+
   const data = {
 
     fields: {
@@ -29,6 +29,17 @@ const create = async (request) => {
     }
   };
 
+  return data;
+}
+
+const create = async (request) => {
+  let data = {}
+  try {
+    data = mappData(request);
+  } catch(e) {
+    return 'Unable to understand the issue request - @' + (new Date()).toLocaleString();
+  }
+  
   options = {
     method: 'POST',
     headers: {
@@ -42,8 +53,9 @@ const create = async (request) => {
 
   let msgText = '';
   try {
-    let result = await axios(options);
-
+    const result = await axios(options);
+    console.log(result);
+    
     msgText = 'The issue "' + request.request.summary + '" created succeefully - @' + (new Date()).toLocaleString();
   } catch(e) {
 
