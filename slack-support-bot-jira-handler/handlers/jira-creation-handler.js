@@ -1,6 +1,7 @@
 const axios = require('axios');
 const jiraMapper = require('./jira-mapper');
 
+const BOT_APP_NAME = process.env.BOT_APP_NAME;
 const JIRA_CREATE_URL = process.env.JIRA_CREATE_URL;
 const JIRA_AUTH_EMAIL = process.env.JIRA_AUTH_EMAIL;
 const JIRA_AUTH_TOKEN = process.env.JIRA_AUTH_TOKEN;
@@ -54,13 +55,21 @@ const create = async (request) => {
   let msgText = '';
   try {
     const result = await axios(options);
-    console.log(result);
-    
-    msgText = 'The issue "' + request.request.summary + '" created succeefully - @' + (new Date()).toLocaleString();
-  } catch(e) {
+    const key = result.data.key;
+    const summary = request.request.summary;
 
-    msgText = 'Unable to create issue "' + request.request.summary + '" - @' + (new Date()).toLocaleString()
-      + ', please contact technical support.';
+    msgText = `*The issue created successfully @ ${(new Date()).toLocaleString()}*\n\n`
+      + `*Issue Key:* ${key}\n`
+      + `*Issue Summary:* ${summary}\n\n`
+      + `To attach a file to the issue, upload the file to "*${BOT_APP_NAME}*" `
+      + `and type the issue key *${key}* (*Issue key only*) in the message when share the file.\n`;
+
+  } catch(e) {
+    const summary = request.request.summary;
+
+    msgText = `*Unable to create issue:* ${summary}\n`
+      + `@ ${(new Date()).toLocaleString()}\n\n`
+      + `Please contact technical support.\n`;
   }
 
   return msgText;
