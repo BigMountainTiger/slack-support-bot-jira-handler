@@ -15,7 +15,7 @@ const createMapper = (request) => {
 
   return {
     projectKey: () => {
-      return 'SLE';
+      return 'GSD';
     },
     summary: () => {
       return r.summary;
@@ -24,10 +24,10 @@ const createMapper = (request) => {
       return r.description;
     },
     reporterId: () => {
-      return '5e7e9cec1e65980c42c12b5d';
+      return '5d727c657dfaa80d90542b1e';
     },
     assigneeId: () => {
-      return '5e7e9cec1e65980c42c12b5d';
+      return '5d727c657dfaa80d90542b1e';
     },
     duedate: () => {
       return formatDate(new Date(r.duedate))
@@ -44,7 +44,7 @@ const createMapper = (request) => {
       }
     },
     issuetypeName: () => {
-      return 'Bug';
+      return 'Email request';
     }
   }
 };
