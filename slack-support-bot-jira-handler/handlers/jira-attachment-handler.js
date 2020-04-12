@@ -28,8 +28,12 @@ const attachAFile = async (data) => {
       url: slack_url,
     };
 
-    // Slack does not respond failure if auth fails
     slack_res = await axios(options);
+
+    const content_length = slack_res.headers['content-length'];
+    if ((!content_length) || (parseInt(content_length) !== file.size)) {
+      return `Unable to attach *${fileName}*, Failed to download the file from slack, possibly permission denied.`;
+    }
   } catch(e) {
     return `Unable to attach *${fileName}*, Failed to download the file from slack`;
   }

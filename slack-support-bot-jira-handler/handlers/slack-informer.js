@@ -20,7 +20,8 @@ const inform = async (msg) => {
     }
   };
 
-  await axios(options);;
+  const slack_res = await axios(options);
+  if (!slack_res.data.ok) { throw Error('Unable to send information to Slack') }
 };
 
 exports.inform = inform;
