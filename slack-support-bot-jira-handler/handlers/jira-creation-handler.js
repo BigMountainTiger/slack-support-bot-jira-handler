@@ -1,4 +1,5 @@
 const axios = require('axios');
+const CancelToken = axios.CancelToken;
 const jiraMapper = require('./jira-mapper');
 
 const BOT_APP_NAME = process.env.BOT_APP_NAME;
@@ -41,8 +42,12 @@ const create = async (request) => {
     return 'Unable to understand the issue request - @' + (new Date()).toLocaleString();
   }
   
+  let source = CancelToken.source();
+  setTimeout(() => { source.cancel(); }, 3 * 1000);
+
   options = {
     method: 'POST',
+    cancelToken: source.token,
     headers: {
       'X-Atlassian-Token': 'nocheck',
       'content-type': 'application/json'

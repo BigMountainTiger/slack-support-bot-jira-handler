@@ -38,9 +38,13 @@ const attachAFile = async (data) => {
     const form = new FormData();
     form.append('file', slack_res.data);
 
+    let source = CancelToken.source();
+    setTimeout(() => { source.cancel(); }, 3 * 1000);
+
     const jira_url = JIRA_ATTACHMENT_URL.replace('${jiraId}', jiraId);
     const options = {
       method: 'POST',
+      cancelToken: source.token,
       headers: {
         'X-Atlassian-Token': 'nocheck',
         'content-type': `multipart/form-data; boundary=${form._boundary}`
